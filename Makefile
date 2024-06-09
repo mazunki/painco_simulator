@@ -1,8 +1,8 @@
 
 CC = clang
-CFLAGS = -Wall -Wextra -std=c99 -Iinclude
+CFLAGS = -O3 -Wall -Wextra -std=c99 -Iinclude
 
-SRC = src/simulation.c
+SRC = $(wildcard src/*.c)
 INCLUDES = $(wildcard include/*.h)
 
 TARGET = painco

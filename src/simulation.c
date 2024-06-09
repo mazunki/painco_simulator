@@ -1,32 +1,20 @@
-#include <stdio.h>
-#include <stdlib.h>
+
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
-#include <time.h>
+#include <stdio.h>
 
 #include "character.h"
-#include "data.h"
-
-int random_damage(int min, int max) {
-    return rand() % (max - min + 1) + min;
-}
-
-double chance_to_hit(int accuracy, int evasion) {
-    if (accuracy < evasion) {
-        return (double) accuracy / (double) (2*evasion);
-    } else {
-        return 1.0 - ((double) evasion / (double) (2*accuracy));
-    }
-}
+#include "simulation.h"
 
 bool hit_target(int accuracy, int evasion) {
     int hit_chance;
     if (accuracy < evasion) {
-        hit_chance = accuracy * 1024 / (2 * evasion);
+        hit_chance = accuracy * 16384 / (2 * evasion);
     } else {
-        hit_chance = 1024 - (evasion * 1024 / (2 * accuracy));
+        hit_chance = 16384 - (evasion * 16384 / (2 * accuracy));
     }
-    return (rand() % 1024) < hit_chance;
+    return (rand() % 16384) < hit_chance;
 }
 
 long simulate_battle(Character *player, Character *opponent) {
@@ -55,20 +43,14 @@ long simulate_battle(Character *player, Character *opponent) {
     return time;
 }
 
-void print_target(const char *name, Character c) {
-    printf("%s with dmg: [%d, %d] @ hit chance: %.3f%% every %d ms\n", name, c.min_damage, c.max_damage, 100.00*c.hit_chance, c.interval);
-}
-
-void simulate_battles(Summary *s, int n) {
+void simulate_battles(Summary *s, Character player, Character enemy, int n) {
     s->battle_count += n;
-
-    Character enemy = steel_knight;
 
     player.hit_chance = chance_to_hit(player.accuracy, enemy.evasion);
     enemy.hit_chance = chance_to_hit(enemy.accuracy, player.evasion);
-    printf("Running %d simulations.\n", n);
-    print_target("Player", player);
-    print_target("Enemy", enemy);
+    printf("Running %'d simulations.\n", n);
+    print_target(player);
+    print_target(enemy);
     printf("\n");
 
     while (n--) {
@@ -87,41 +69,5 @@ void simulate_battles(Summary *s, int n) {
     }
 }
 
-void print_summary(Summary s) {
-    unsigned long long t_seconds = s.total_time/1000;
+/* vim: set sw=4 ts=8 expandtab*/
 
-    int days = t_seconds / 86400;
-    int hours = (t_seconds % 86400) / 3600;
-    int minutes = (t_seconds % 3600) / 60;
-    int seconds = t_seconds % 60;
-
-    printf("Total battle time: %dd %02dh %02dm %02ds\n", days, hours, minutes, seconds);
-    printf("Number of battles: %'d\n", s.battle_count);
-    printf("Player wins: %d (%.5f %%)\n", s.player_wins, 100*(double)s.player_wins/(double)s.battle_count);
-    printf("Opponent wins: %d (%.5f %%)\n", s.opponent_wins, 100*(double)s.opponent_wins/(double)s.battle_count);
-    printf("\n");
-
-    unsigned long long tpk = ((double)t_seconds)/s.player_wins;
-    int ttdays = tpk / 86400;
-    int tthours = (tpk % 86400) / 3600;
-    int ttminutes = (tpk % 3600) / 60;
-    int ttseconds = tpk % 60;
-
-    printf("Time per kill: %dd %02dh %02dm %02ds\n", ttdays, tthours, ttminutes, ttseconds);
-}
-
-int main() {
-    srand(time(NULL));
-    
-    
-    int num_simulations = 100*1000*1000;
-    // printf("Enter the number of simulations: ");
-    // scanf("%d", &num_simulations);
-
-    Summary s = {0};
-    simulate_battles(&s, num_simulations);
-
-    print_summary(s);
-    
-    return 0;
-}

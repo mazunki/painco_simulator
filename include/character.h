@@ -18,6 +18,7 @@ typedef struct {
         double hit_chance;
 	AttackStyle style;
 	int drop_w, drop_q;
+	int successful_hits;
         const char *name;
 } Character;
 

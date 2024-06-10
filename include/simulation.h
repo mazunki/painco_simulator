@@ -7,6 +7,7 @@ typedef struct {
         unsigned long long total_time;
         int battle_count;
         int player_wins;
+        int perfect_wins;
         int opponent_wins;
 	int drops;
 } Summary;

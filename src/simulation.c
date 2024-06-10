@@ -30,12 +30,20 @@ long simulate_battle(Character *player, Character *opponent) {
 		if ((time % player->interval) == 0) {
 			if (hit_target(player->accuracy, opponent->evasion)) {
 				opponent->health -= random_damage(player->min_damage, player->max_damage);
+				/*
+				if (player.foodqty > 0) {
+					player->health += player.foodheal;
+					player.foodqty--;
+				}
+				*/
+				player->successful_hits++;
 			}
 		}
 
 		if ((time % opponent->interval) == 0) {
 			if (hit_target(opponent->accuracy, player->evasion)) {
 				player->health -= random_damage(opponent->min_damage, opponent->max_damage);
+				opponent->successful_hits++;
 			}
 		}
 
@@ -63,12 +71,17 @@ void simulate_battles(Summary *s, Character player, Character enemy, int n) {
 
 		memcpy(&_player, &player, sizeof(Character));
 		memcpy(&_enemy, &enemy, sizeof(Character));
+		_enemy.successful_hits = 0;
+		_player.successful_hits = 0;
 
 		s->total_time += simulate_battle(&_player, &_enemy);
 		if (_player.health > 0) {
 			s->player_wins++;
-			if (roll_item(enemy.drop_w, enemy.drop_q)) {
+			if (roll_item(_enemy.drop_w, _enemy.drop_q)) {
 				s->drops++;
+			}
+			if (_enemy.successful_hits == 0) {
+				s->perfect_wins++;
 			}
 		} else {
 			s->opponent_wins++;

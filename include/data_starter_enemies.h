@@ -15,6 +15,18 @@ Character steel_knight = {
         .name = "Steel Knight",
 };
 
+Character steel_knight_special = {
+        .min_damage = 1,
+        .max_damage = 32,
+        .interval = 2600,
+        .health = 91,
+        .accuracy = 1216,
+        .evasion = 1216,  // melee
+	.style = MELEE,
+	.drop_w = 10, .drop_q = 67,
+        .name = "Steel Knight (custom)",
+};
+
 Character golbin = {
         .min_damage = 1,
         .max_damage = 23,

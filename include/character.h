@@ -1,7 +1,13 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
-
 #include <stdbool.h>
+
+typedef enum {
+	MELEE,
+	RANGED,
+	MAGIC
+} AttackStyle;
+
 typedef struct {
         int min_damage;
         int max_damage;
@@ -10,6 +16,8 @@ typedef struct {
         int interval;
         int health;
         double hit_chance;
+	AttackStyle style;
+	int drop_w, drop_q;
         const char *name;
 } Character;
 

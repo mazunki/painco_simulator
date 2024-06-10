@@ -17,7 +17,7 @@ double chance_to_hit(int accuracy, int evasion) {
 }
 
 void print_target(Character c) {
-    printf("%s with dmg: [%d, %d] @ hit chance: %.3f%% every %d ms\n", c.name, c.min_damage, c.max_damage, 100.00*c.hit_chance, c.interval);
+    printf("%s (%d hp) with dmg: [%d, %d] @ hit chance: %.3f%% every %d ms\n", c.name, c.health, c.min_damage, c.max_damage, 100.00*c.hit_chance, c.interval);
 }
 
 /* vim: set sw=4 ts=8 expandtab*/

@@ -8,6 +8,7 @@ typedef struct {
         int battle_count;
         int player_wins;
         int opponent_wins;
+	int drops;
 } Summary;
 
 long simulate_battle(Character *player, Character *opponent);
